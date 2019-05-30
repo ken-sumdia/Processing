@@ -1,11 +1,10 @@
-/**
- * Bezier. 
- * 
- * The first two parameters for the bezier() function specify the 
- * first point in the curve and the last two parameters specify 
- * the last point. The middle parameters set the control points
- * that define the shape of the curve. 
- */
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+Ripple rip;
+List<Ripple> ripList = new  ArrayList<Ripple>();
+
 float P_x;
 float P_y;
 float P_x1;
@@ -17,6 +16,7 @@ float P2_x=440;
 float P2_y=300;
 float P3_x=240;
 float P3_y=300;
+int flag=0;
 
 void setup() {
   size(640, 360); 
@@ -25,6 +25,18 @@ void setup() {
 }
 
 void draw() {
+    //fade();
+    Iterator<Ripple> iter = ripList.iterator();
+    while(iter.hasNext())
+    {
+        Ripple rip = iter.next();
+        rip.update();
+        rip.display();
+        if(rip.getDiameter() > width)
+        {
+            iter.remove();
+        }
+    }
   background(0);
   float P0_x=mouseX;
   float P0_y=mouseY;
@@ -40,5 +52,71 @@ void draw() {
   P_y1=pow((1-2*t),3)*P0_y+3*t*pow(1-2*t,2)*P1_y+3*pow(2*t,2)*(1-2*t)*P2_y+pow(2*t,3)*P3_y;
   point(P_x1,P_y1);
   }
-  ellipse(mouseX,mouseY,120,120);
+/*  if(mousePressed == true){
+    flag++;
+  ellipse(mouseX,mouseY,180,180);
  }
+ else{
+   ellipse(mouseX,mouseY,120,120);
+ }
+ if(flag==1){
+  for(float i=0;i<900;i+=1){
+    ellipse(mouseX,mouseY,i,i);
+    
+    if(i==899){
+      flag=0;
+    }
+  }
+ }
+ */
+}
+//クリックされたときに実行される
+void mousePressed()
+{
+   ripList.add(new Ripple(width/2, height/2)); //波紋を追加する
+}
+
+void fade()
+{
+  noStroke();
+  fill(0,0,0,50);
+  rect(0,0,width, height);
+}
+
+class Ripple 
+{
+    private float x, y;
+    private float d;
+    private color c;
+    
+    public Ripple(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+        this.d = 1;
+        this.c = color(random(360), 200, 200);
+    }
+    
+    public float getDiameter()
+    {
+        return d;
+    }
+    
+    public void setDiameter(float d)
+    {
+        this.d = d;
+    }
+    
+    public void update()
+    {
+        d += 5.0;
+    }
+    
+    public void display()
+    {
+        noFill();
+        stroke(c);
+        strokeWeight(5);
+        ellipse(x, y, d, d);
+    }
+}
