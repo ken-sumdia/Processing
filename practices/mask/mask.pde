@@ -7,8 +7,9 @@ PImage img;
 PImage tmp;
 float thresh=20.0;
 
+
 void setup() {
-  size(1280,480);
+  size(1920,480);
   colorMode(RGB);
   video = new Capture(this, 640,480,50);
   img = loadImage("beach.jpg");
@@ -34,13 +35,14 @@ void keyPressed(){
 void draw() { 
   if (video.available()) {
     video.read ();
-    video.loadPixels();
-    float d =0.1;
+//    video.loadPixels();
+  //  float d =0.1;
     for(int x=0;x<640;x++){
       for(int y=0;y<480;y++){
         //もし，一時保存したtmpと比較して，同じであればimgをセットする
 //        if(abs(brightness(tmp.get(x,y)) - brightness(video.get(x,y))) < thresh){ 
         if(abs(brightness(tmp.get(x,y)) - brightness(video.get(x,y))) < thresh){ 
+         //  result.set(x,y,video.get(x,y));
           result.set(x,y,img.get(x,y));
         }
         //違えばvideo画像を入れる．
@@ -48,6 +50,7 @@ void draw() {
             // fill(video.pixels[y*640 + x]);
      //       ellipse(x+640, y+480, d, d);
             result.set(x,y,video.get(x,y));
+         //   result.set(x,y,img.get(x,y));
         }
       }
     }
@@ -56,6 +59,6 @@ void draw() {
     image(video,0,0);
 //  image(result,0,0);
     image(result,video.width,0);
-
+    image(tmp,1280,0);
   
 }
